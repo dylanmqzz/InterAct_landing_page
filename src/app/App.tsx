@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef, useCallback } from "react";
+import { useState, useEffect, useRef, useCallback, createContext, useContext } from "react";
 
 /* ── Fonts ─────────────────────────────────────────────── */
 const MONT: React.CSSProperties = { fontFamily: "'Montserrat', sans-serif" };
@@ -41,6 +41,11 @@ function LinkedinIcon({ size = 20, color = "currentColor" }: { size?: number; co
     </svg>
   );
 }
+
+/* ── Dark Mode Context ──────────────────────────────── */
+interface ThemeCtx { isDark: boolean; toggle: () => void; }
+const DarkModeContext = createContext<ThemeCtx>({ isDark: false, toggle: () => {} });
+function useTheme() { return useContext(DarkModeContext); }
 
 /* ── useInView ──────────────────────────────────────────── */
 function useInView(threshold = 0.12) {
@@ -111,7 +116,7 @@ function SectionLabel({ children, dark = false }: { children: React.ReactNode; d
         fontWeight: 600,
         letterSpacing: "0.12em",
         textTransform: "uppercase",
-        color: dark ? "rgba(255,255,255,0.5)" : "#2A7CC7",
+        color: "var(--text-label)",
         marginBottom: "12px",
       }}
     >
@@ -143,6 +148,7 @@ function GradientBar() {
 function Navbar() {
   const [scrolled, setScrolled] = useState(false);
   const [mobileOpen, setMobileOpen] = useState(false);
+  const { isDark, toggle } = useTheme();
 
   useEffect(() => {
     const fn = () => setScrolled(window.scrollY > 50);
@@ -167,15 +173,19 @@ function Navbar() {
         style={{ top: "14px" }}
       >
         <nav
-          className="w-full flex items-center justify-between bg-white transition-all duration-300"
+          className="w-full flex items-center justify-between transition-all duration-300"
           style={{
             maxWidth: "1300px",
             borderRadius: "28px",
-            padding: scrolled ? "0 32px" : "0 32px",
+            background: scrolled ? "var(--bg-nav-scrolled)" : "var(--bg-nav)",
+            backdropFilter: "blur(20px)",
+            WebkitBackdropFilter: "blur(20px)",
+            border: "1px solid var(--border-nav)",
+            padding: "0 32px",
             height: scrolled ? "60px" : "72px",
             boxShadow: scrolled
-              ? "0 8px 40px rgba(0,0,0,0.14)"
-              : "0 4px 24px rgba(0,0,0,0.08)",
+              ? `0 8px 40px var(--shadow-nav)`
+              : `0 4px 24px var(--shadow-card)`,
           }}
         >
           {/* Logo */}
@@ -188,13 +198,13 @@ function Navbar() {
           </a>
 
           {/* Desktop links */}
-          <div className="hidden lg:flex items-center gap-7">
+          <div className="hidden lg:flex items-center gap-6">
             {links.map((l) => (
               <a
                 key={l.label}
                 href={l.href}
                 className="relative group no-underline"
-                style={{ ...MONT, fontWeight: 600, fontSize: "12.5px", color: "#4A5568", letterSpacing: "0.04em", textTransform: "uppercase" }}
+                style={{ ...MONT, fontWeight: 600, fontSize: "12.5px", color: "var(--text-nav-link)", letterSpacing: "0.04em", textTransform: "uppercase" }}
               >
                 {l.label}
                 <span
@@ -203,16 +213,29 @@ function Navbar() {
                 />
               </a>
             ))}
-            
+            {/* Dark mode toggle */}
+            <button
+              onClick={toggle}
+              title={isDark ? "Cambiar a modo claro" : "Cambiar a modo oscuro"}
+              style={{
+                background: "none", border: "1px solid var(--border-nav)",
+                borderRadius: "8px", cursor: "pointer",
+                padding: "6px", display: "flex", alignItems: "center", justifyContent: "center",
+                transition: "all 0.2s",
+                color: "var(--icon-nav)",
+              }}
+            >
+              <MIcon name={isDark ? "light_mode" : "dark_mode"} size={18} color="var(--icon-nav)" />
+            </button>
           </div>
 
           {/* Hamburger */}
           <button
             className="lg:hidden flex items-center justify-center"
-            style={{ background: "none", border: "none", color: "#0C2340", cursor: "pointer" }}
+            style={{ background: "none", border: "none", cursor: "pointer" }}
             onClick={() => setMobileOpen(true)}
           >
-            <MIcon name="menu" size={24} color="#0C2340" />
+            <MIcon name="menu" size={24} color="var(--icon-nav)" />
           </button>
         </nav>
       </div>
@@ -244,7 +267,7 @@ function Navbar() {
         >
           <span style={{ ...MONT, fontWeight: 800, fontSize: "18px", color: "#fff" }}>Inter-act</span>
           <button
-            style={{ background: "none", border: "none", cursor: "pointer", color: "#0C2340" }}
+            style={{ background: "none", border: "none", cursor: "pointer" }}
             onClick={() => setMobileOpen(false)}
           >
             <MIcon name="close" size={22} color="#fff" />
@@ -263,14 +286,17 @@ function Navbar() {
             </a>
           ))}
           <button
-            className="mt-6"
+            className="mt-6 flex items-center justify-center gap-2"
+            onClick={toggle}
             style={{
               ...MONT, fontWeight: 700, fontSize: "13px", letterSpacing: "0.06em",
-              background: "#2A7CC7", color: "#fff", borderRadius: "6px",
-              padding: "13px 22px", border: "none", cursor: "pointer", textTransform: "uppercase",
+              background: "rgba(255,255,255,0.1)", color: "#fff", borderRadius: "6px",
+              padding: "13px 22px", border: "1px solid rgba(255,255,255,0.2)", cursor: "pointer",
+              textTransform: "uppercase",
             }}
           >
-            Ver Demo
+            <MIcon name={isDark ? "light_mode" : "dark_mode"} size={16} color="#fff" />
+            {isDark ? "Modo Claro" : "Modo Oscuro"}
           </button>
         </div>
       </div>
@@ -478,7 +504,7 @@ function QuienesSomos() {
   const { ref: imgRef, inView: imgInView } = useInView();
 
   return (
-    <section id="quienes" style={{ background: "#fff", padding: "96px clamp(24px,7vw,120px)" }}>
+    <section id="quienes" style={{ background: "var(--bg-primary)", padding: "96px clamp(24px,7vw,120px)" }}>
       <div className="max-w-[1200px] mx-auto grid grid-cols-1 lg:grid-cols-2 gap-16 lg:gap-24 items-center">
         {/* Text */}
         <div
@@ -492,14 +518,14 @@ function QuienesSomos() {
           <SectionLabel>Quiénes Somos</SectionLabel>
           <h2
             className="mb-5"
-            style={{ ...MONT, fontWeight: 700, fontSize: "clamp(28px,3vw,40px)", color: "#0C2340", lineHeight: 1.2, letterSpacing: "-0.02em" }}
+            style={{ ...MONT, fontWeight: 700, fontSize: "clamp(28px,3vw,40px)", color: "var(--text-heading)", lineHeight: 1.2, letterSpacing: "-0.02em" }}
           >
             El equipo que convierte desafíos sociales en soluciones tecnológicas
           </h2>
-          <p style={{ ...INTER, fontSize: "16px", lineHeight: 1.7, color: "#4A5568", marginBottom: "28px" }}>
+          <p style={{ ...INTER, fontSize: "16px", lineHeight: 1.7, color: "var(--text-body)", marginBottom: "28px" }}>
             Inter-act nació de la convicción de que la tecnología debe estar al servicio de las personas, no al revés. Somos un grupo multidisciplinario de desarrolladores, diseñadores y especialistas en bienestar organizacional que trabaja con metodologías ágiles y un compromiso irrenunciable: la privacidad del usuario es arquitectura, no un agregado.
           </p>
-          <p style={{ ...INTER, fontSize: "16px", lineHeight: 1.7, color: "#4A5568", marginBottom: "36px" }}>
+          <p style={{ ...INTER, fontSize: "16px", lineHeight: 1.7, color: "var(--text-body)", marginBottom: "36px" }}>
             Puerto Seguro es nuestra primera plataforma en producción: un sistema que detecta burnout en trabajadores portuarios antes de que se convierta en una crisis de salud.
           </p>
 
@@ -516,8 +542,8 @@ function QuienesSomos() {
                 style={{
                   ...INTER, fontSize: "13px", fontWeight: 500,
                   padding: "7px 14px", borderRadius: "100px",
-                  background: "#EBF4FF", color: "#1A4A7A",
-                  border: "1px solid #BFDBFE",
+                  background: "var(--pill-bg)", color: "var(--pill-text)",
+                  border: "1px solid var(--pill-border)",
                 }}
               >
                 <MIcon name={p.icon} size={15} color="#1A4A7A" fill={1} />
@@ -552,7 +578,7 @@ function QuienesSomos() {
             transition: "all 0.8s cubic-bezier(0.22,1,0.36,1) 0.15s",
           }}
         >
-          <div style={{ borderRadius: "16px", overflow: "hidden", background: "#F4F7FA" }}>
+          <div style={{ borderRadius: "16px", overflow: "hidden", background: "var(--bg-secondary)" }}>
             <img
               src="src\assets\equipo.png"
               alt="Equipo Inter-act trabajando"
@@ -565,14 +591,14 @@ function QuienesSomos() {
             className="absolute flex items-center gap-2"
             style={{
               bottom: "20px", left: "20px",
-              background: "#fff",
+              background: "var(--floating-badge-bg)",
               borderRadius: "10px",
               padding: "12px 18px",
               boxShadow: "0 8px 32px rgba(0,0,0,0.12)",
             }}
           >
             <MIcon name="check_circle" size={18} color="#16A34A" fill={1} />
-            <span style={{ ...INTER, fontSize: "13px", fontWeight: 600, color: "#1A1A2E" }}>
+            <span style={{ ...INTER, fontSize: "13px", fontWeight: 600, color: "var(--text-heading)" }}>
               Validado con especialistas
             </span>
           </div>
@@ -636,8 +662,8 @@ function FeatureCard({ card, delay }: { card: typeof PLATFORM_CARDS[0]; delay: n
     <div
       ref={ref}
       style={{
-        background: "#fff",
-        border: "1px solid #E2E8F0",
+        background: "var(--bg-surface)",
+        border: "1px solid var(--border-color)",
         borderRadius: "12px",
         padding: "32px",
         opacity: inView ? 1 : 0,
@@ -646,31 +672,33 @@ function FeatureCard({ card, delay }: { card: typeof PLATFORM_CARDS[0]; delay: n
         cursor: "default",
       }}
       onMouseEnter={(e) => {
-        e.currentTarget.style.boxShadow = "0 12px 40px rgba(0,0,0,0.08)";
+        e.currentTarget.style.boxShadow = "0 12px 40px rgba(0,0,0,0.12)";
         e.currentTarget.style.transform = "translateY(-4px)";
+        e.currentTarget.style.background = "var(--bg-surface-hover)";
       }}
       onMouseLeave={(e) => {
         e.currentTarget.style.boxShadow = "none";
         e.currentTarget.style.transform = "translateY(0)";
+        e.currentTarget.style.background = "var(--bg-surface)";
       }}
     >
       <div
         className="flex items-center justify-center mb-5"
-        style={{ width: "52px", height: "52px", borderRadius: "12px", background: card.color === "#2A7CC7" ? "#EBF4FF" : "#E0F7FA" }}
+        style={{ width: "52px", height: "52px", borderRadius: "12px", background: card.color === "#2A7CC7" ? "var(--bg-icon-blue)" : "var(--bg-icon-teal)" }}
       >
-        <MIcon name={card.icon} size={26} color={card.color} fill={1} />
+        <MIcon name={card.icon} size={26} color={card.color === "#2A7CC7" ? "var(--icon-blue)" : "var(--icon-teal)"} fill={1} />
       </div>
-      <h3 style={{ ...MONT, fontWeight: 600, fontSize: "17px", color: "#0C2340", marginBottom: "10px", lineHeight: 1.3 }}>
+      <h3 style={{ ...MONT, fontWeight: 600, fontSize: "17px", color: "var(--text-heading)", marginBottom: "10px", lineHeight: 1.3 }}>
         {card.title}
       </h3>
-      <p style={{ ...INTER, fontSize: "14.5px", lineHeight: 1.65, color: "#4A5568", marginBottom: "18px" }}>
+      <p style={{ ...INTER, fontSize: "14.5px", lineHeight: 1.65, color: "var(--text-body)", marginBottom: "18px" }}>
         {card.text}
       </p>
       <span
         style={{
           ...INTER, fontSize: "11px", fontWeight: 500, letterSpacing: "0.06em",
           padding: "4px 12px", borderRadius: "100px",
-          background: "#F4F7FA", color: "#1A4A7A", border: "1px solid #E2E8F0",
+          background: "var(--badge-bg)", color: "var(--badge-text)", border: "1px solid var(--border-color)",
         }}
       >
         {card.badge}
@@ -682,7 +710,7 @@ function FeatureCard({ card, delay }: { card: typeof PLATFORM_CARDS[0]; delay: n
 function PuertoSeguro() {
   const { ref, inView } = useInView();
   return (
-    <section id="plataforma" style={{ background: "#F4F7FA", padding: "96px clamp(24px,7vw,120px)" }}>
+    <section id="plataforma" style={{ background: "var(--bg-secondary)", padding: "96px clamp(24px,7vw,120px)" }}>
       <div className="max-w-[1200px] mx-auto">
         <div
           ref={ref}
@@ -695,11 +723,11 @@ function PuertoSeguro() {
         >
           <SectionLabel>Nuestra Plataforma Estrella</SectionLabel>
           <h2
-            style={{ ...MONT, fontWeight: 700, fontSize: "clamp(26px,3vw,38px)", color: "#0C2340", lineHeight: 1.2, letterSpacing: "-0.02em", marginBottom: "16px" }}
+            style={{ ...MONT, fontWeight: 700, fontSize: "clamp(26px,3vw,38px)", color: "var(--text-heading)", lineHeight: 1.2, letterSpacing: "-0.02em", marginBottom: "16px" }}
           >
             Puerto Seguro — Sistema integral de detección de burnout
           </h2>
-          <p style={{ ...INTER, fontSize: "16px", lineHeight: 1.7, color: "#4A5568", maxWidth: "640px", margin: "0 auto" }}>
+          <p style={{ ...INTER, fontSize: "16px", lineHeight: 1.7, color: "var(--text-body)", maxWidth: "640px", margin: "0 auto" }}>
             Diseñada para puertos y entornos industriales. Combina monitoreo biométrico continuo, evaluación psicológica validada y análisis de inteligencia artificial para generar un score de riesgo personalizado.
           </p>
         </div>
@@ -747,7 +775,7 @@ const STEPS = [
 function Metodologia() {
   const { ref, inView } = useInView();
   return (
-    <section style={{ background: "#fff", padding: "96px clamp(24px,7vw,120px)" }}>
+    <section style={{ background: "var(--bg-primary)", padding: "96px clamp(24px,7vw,120px)" }}>
       <div className="max-w-[1100px] mx-auto">
         <div
           ref={ref}
@@ -759,7 +787,7 @@ function Metodologia() {
           }}
         >
           <SectionLabel>Cómo Funciona</SectionLabel>
-          <h2 style={{ ...MONT, fontWeight: 700, fontSize: "clamp(26px,3vw,38px)", color: "#0C2340", lineHeight: 1.2, letterSpacing: "-0.02em" }}>
+          <h2 style={{ ...MONT, fontWeight: 700, fontSize: "clamp(26px,3vw,38px)", color: "var(--text-heading)", lineHeight: 1.2, letterSpacing: "-0.02em" }}>
             Un flujo diseñado para la seguridad y la privacidad
           </h2>
         </div>
@@ -769,7 +797,7 @@ function Metodologia() {
           {/* Connector line */}
           <div
             className="absolute top-[26px] left-[26px] right-[26px] h-px"
-            style={{ background: "#E2E8F0", zIndex: 0 }}
+            style={{ background: "var(--connector-line)", zIndex: 0 }}
           />
           {STEPS.map((step, i) => {
             const { ref, inView } = useInView();
@@ -789,22 +817,22 @@ function Metodologia() {
                   className="relative z-10 flex items-center justify-center mb-5"
                   style={{
                     width: "52px", height: "52px", borderRadius: "50%",
-                    background: "#EBF4FF", border: "2px solid #2A7CC7",
+                    background: "var(--step-circle-bg)", border: "2px solid var(--step-circle-border)",
                     flexShrink: 0,
                   }}
                 >
-                  <span style={{ ...MONT, fontWeight: 800, fontSize: "15px", color: "#0C2340" }}>{step.num}</span>
+                  <span style={{ ...MONT, fontWeight: 800, fontSize: "15px", color: "var(--text-heading)" }}>{step.num}</span>
                 </div>
                 <div
                   className="flex items-center justify-center mb-4"
-                  style={{ width: "40px", height: "40px", borderRadius: "10px", background: "#F4F7FA" }}
+                  style={{ width: "40px", height: "40px", borderRadius: "10px", background: "var(--bg-secondary)" }}
                 >
-                  <MIcon name={step.icon} size={20} color="#2A7CC7" fill={1} />
+                  <MIcon name={step.icon} size={20} color="var(--icon-blue)" fill={1} />
                 </div>
-                <h3 style={{ ...MONT, fontWeight: 700, fontSize: "15px", color: "#0C2340", marginBottom: "8px", lineHeight: 1.3 }}>
+                <h3 style={{ ...MONT, fontWeight: 700, fontSize: "15px", color: "var(--text-heading)", marginBottom: "8px", lineHeight: 1.3 }}>
                   {step.title}
                 </h3>
-                <p style={{ ...INTER, fontSize: "13.5px", lineHeight: 1.65, color: "#4A5568" }}>
+                <p style={{ ...INTER, fontSize: "13.5px", lineHeight: 1.65, color: "var(--text-body)" }}>
                   {step.text}
                 </p>
               </div>
@@ -814,7 +842,7 @@ function Metodologia() {
 
         {/* Mobile: vertical */}
         <div className="flex md:hidden flex-col gap-8 relative">
-          <div className="absolute top-6 bottom-6 left-6 w-px" style={{ background: "#E2E8F0" }} />
+          <div className="absolute top-6 bottom-6 left-6 w-px" style={{ background: "var(--connector-line)" }} />
           {STEPS.map((step, _i) => (
               <div key={step.num} className="flex gap-6 pl-0">
                 <div className="relative z-10 flex-shrink-0">
@@ -822,17 +850,17 @@ function Metodologia() {
                     className="flex items-center justify-center"
                     style={{
                       width: "52px", height: "52px", borderRadius: "50%",
-                      background: "#EBF4FF", border: "2px solid #2A7CC7",
+                      background: "var(--step-circle-bg)", border: "2px solid var(--step-circle-border)",
                     }}
                   >
-                    <span style={{ ...MONT, fontWeight: 800, fontSize: "14px", color: "#0C2340" }}>{step.num}</span>
+                    <span style={{ ...MONT, fontWeight: 800, fontSize: "14px", color: "var(--text-heading)" }}>{step.num}</span>
                   </div>
                 </div>
                 <div className="pt-2">
-                  <h3 style={{ ...MONT, fontWeight: 700, fontSize: "16px", color: "#0C2340", marginBottom: "6px" }}>
+                  <h3 style={{ ...MONT, fontWeight: 700, fontSize: "16px", color: "var(--text-heading)", marginBottom: "6px" }}>
                     {step.title}
                   </h3>
-                  <p style={{ ...INTER, fontSize: "14px", lineHeight: 1.65, color: "#4A5568" }}>
+                  <p style={{ ...INTER, fontSize: "14px", lineHeight: 1.65, color: "var(--text-body)" }}>
                     {step.text}
                   </p>
                 </div>
@@ -872,8 +900,8 @@ function StatCard({
   return (
     <div
       style={{
-        background: "#fff",
-        border: "1px solid #E2E8F0",
+        background: "var(--bg-surface)",
+        border: "1px solid var(--border-color)",
         borderRadius: "12px",
         padding: "32px",
         opacity: parentInView ? 1 : 0,
@@ -881,27 +909,29 @@ function StatCard({
         transition: `all 0.65s cubic-bezier(0.22,1,0.36,1) ${delay}ms`,
       }}
       onMouseEnter={(e) => {
-        e.currentTarget.style.boxShadow = "0 12px 40px rgba(0,0,0,0.08)";
+        e.currentTarget.style.boxShadow = "0 12px 40px rgba(0,0,0,0.12)";
         e.currentTarget.style.transform = "translateY(-4px)";
+        e.currentTarget.style.background = "var(--bg-surface-hover)";
       }}
       onMouseLeave={(e) => {
         e.currentTarget.style.boxShadow = "none";
         e.currentTarget.style.transform = "translateY(0)";
+        e.currentTarget.style.background = "var(--bg-surface)";
       }}
     >
       <div
         className="flex items-center justify-center mb-5"
-        style={{ width: "48px", height: "48px", borderRadius: "10px", background: accent === "#2A7CC7" ? "#EBF4FF" : "#E0F7FA" }}
+        style={{ width: "48px", height: "48px", borderRadius: "10px", background: accent === "#2A7CC7" ? "var(--bg-icon-blue)" : "var(--bg-icon-teal)" }}
       >
-        <MIcon name={icon} size={24} color={accent} fill={1} />
+        <MIcon name={icon} size={24} color={accent === "#2A7CC7" ? "var(--icon-blue)" : "var(--icon-teal)"} fill={1} />
       </div>
-      <div style={{ ...MONT, fontWeight: 800, fontSize: "48px", color: "#0C2340", lineHeight: 1, marginBottom: "6px" }}>
+      <div style={{ ...MONT, fontWeight: 800, fontSize: "48px", color: "var(--text-heading)", lineHeight: 1, marginBottom: "6px" }}>
         {displayVal}
       </div>
-      <div style={{ ...MONT, fontWeight: 600, fontSize: "13px", color: accent, letterSpacing: "0.04em", marginBottom: "10px" }}>
+      <div style={{ ...MONT, fontWeight: 600, fontSize: "13px", color: accent === "#2A7CC7" ? "var(--icon-blue)" : "var(--icon-teal)", letterSpacing: "0.04em", marginBottom: "10px" }}>
         {suffix}
       </div>
-      <p style={{ ...INTER, fontSize: "13.5px", lineHeight: 1.6, color: "#4A5568" }}>{description}</p>
+      <p style={{ ...INTER, fontSize: "13.5px", lineHeight: 1.6, color: "var(--text-body)" }}>{description}</p>
     </div>
   );
 }
@@ -941,7 +971,7 @@ function Metricas() {
   ];
 
   return (
-    <section id="impacto" style={{ background: "#F4F7FA", padding: "96px clamp(24px,7vw,120px)" }}>
+    <section id="impacto" style={{ background: "var(--bg-secondary)", padding: "96px clamp(24px,7vw,120px)" }}>
       <div className="max-w-[1200px] mx-auto">
         <div
           ref={ref}
@@ -953,7 +983,7 @@ function Metricas() {
           }}
         >
           <SectionLabel>Impacto del Sistema</SectionLabel>
-          <h2 style={{ ...MONT, fontWeight: 700, fontSize: "clamp(26px,3vw,38px)", color: "#0C2340", lineHeight: 1.2, letterSpacing: "-0.02em" }}>
+          <h2 style={{ ...MONT, fontWeight: 700, fontSize: "clamp(26px,3vw,38px)", color: "var(--text-heading)", lineHeight: 1.2, letterSpacing: "-0.02em" }}>
             Números que respaldan el enfoque
           </h2>
         </div>
@@ -1179,7 +1209,7 @@ function EquipoDesarrollo() {
       id="equipo"
       ref={ref}
       style={{
-        background: "linear-gradient(180deg, #f0f4f8 0%, #ffffff 100%)",
+        background: "var(--bg-equipo-grad)",
         padding: "96px clamp(24px,7vw,80px)",
       }}
     >
@@ -1204,15 +1234,15 @@ function EquipoDesarrollo() {
         </span>
         <h2
           style={{
-            ...MONT, fontSize: "clamp(28px,4vw,42px)", fontWeight: 800,
-            color: "#0C2340", lineHeight: 1.15, margin: "0 0 16px",
-          }}
+          ...MONT, fontSize: "clamp(28px,4vw,42px)", fontWeight: 800,
+          color: "var(--text-heading)", lineHeight: 1.15, margin: "0 0 16px",
+        }}
         >
           Las personas detrás de InterAct
         </h2>
         <p
           style={{
-            ...INTER, fontSize: "17px", color: "#4A5568",
+            ...INTER, fontSize: "17px", color: "var(--text-body)",
             lineHeight: 1.7, maxWidth: "540px", margin: "0 auto",
           }}
         >
@@ -1228,11 +1258,11 @@ function EquipoDesarrollo() {
           <div
             key={i}
             style={{
-              background: "#ffffff",
+              background: "var(--bg-surface)",
               borderRadius: "20px",
-              boxShadow: "0 4px 24px rgba(12,35,64,0.08)",
+              boxShadow: "0 4px 24px var(--shadow-card)",
               overflow: "hidden",
-              border: "1px solid rgba(42,124,199,0.10)",
+              border: "1px solid var(--team-card-border)",
               transition: "transform 0.28s ease, box-shadow 0.28s ease",
               opacity: inView ? 1 : 0,
               transform: inView ? "translateY(0)" : "translateY(40px)",
@@ -1241,11 +1271,13 @@ function EquipoDesarrollo() {
             }}
             onMouseEnter={(e) => {
               (e.currentTarget as HTMLElement).style.transform = "translateY(-8px)";
-              (e.currentTarget as HTMLElement).style.boxShadow = "0 16px 48px rgba(12,35,64,0.16)";
+              (e.currentTarget as HTMLElement).style.boxShadow = "0 16px 48px rgba(12,35,64,0.22)";
+              (e.currentTarget as HTMLElement).style.background = "var(--bg-surface-hover)";
             }}
             onMouseLeave={(e) => {
               (e.currentTarget as HTMLElement).style.transform = "translateY(0)";
-              (e.currentTarget as HTMLElement).style.boxShadow = "0 4px 24px rgba(12,35,64,0.08)";
+              (e.currentTarget as HTMLElement).style.boxShadow = "0 4px 24px var(--shadow-card)";
+              (e.currentTarget as HTMLElement).style.background = "var(--bg-surface)";
             }}
           >
             {/* Photo 1:1 */}
@@ -1262,7 +1294,7 @@ function EquipoDesarrollo() {
               <p
                 style={{
                   ...MONT, fontSize: "15px", fontWeight: 700,
-                  color: "#0C2340", margin: "0 0 6px",
+                  color: "var(--text-heading)", margin: "0 0 6px",
                 }}
               >
                 {member.name}
@@ -1394,8 +1426,12 @@ function Footer() {
    APP ROOT
 ══════════════════════════════════════════════════════════ */
 export default function App() {
+  const [isDark, setIsDark] = useState(false);
+  const toggle = () => setIsDark(d => !d);
+
   return (
-    <div style={{ fontFamily: "'Inter', sans-serif", color: "#1A1A2E" }}>
+    <DarkModeContext.Provider value={{ isDark, toggle }}>
+      <div data-dark={isDark ? "true" : "false"} style={{ fontFamily: "'Inter', sans-serif", color: "var(--text-heading)" }}>
       <GradientBar />
       <Navbar />
 
@@ -1416,5 +1452,6 @@ export default function App() {
 
       <Footer />
     </div>
+    </DarkModeContext.Provider>
   );
 }
