@@ -87,8 +87,10 @@
       "vite": "6.3.5"
     },
     "onlyBuiltDependencies": [
+      "@rollup/rollup-win32-x64-msvc",
       "@tailwindcss/oxide",
-      "esbuild"
+      "esbuild",
+      "lightningcss"
     ]
   },
   "optionalDependencies": {

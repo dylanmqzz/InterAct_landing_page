@@ -1,13 +1,46 @@
 import { useState, useEffect, useRef, useCallback } from "react";
-import {
-  Menu, X, ChevronLeft, ChevronRight, Github, Linkedin,
-  Smartphone, BarChart2, Stethoscope, Activity, Scale, Lock,
-  Shield, Zap, Brain, ArrowRight, CheckCircle, Radio
-} from "lucide-react";
 
 /* ── Fonts ─────────────────────────────────────────────── */
 const MONT: React.CSSProperties = { fontFamily: "'Montserrat', sans-serif" };
 const INTER: React.CSSProperties = { fontFamily: "'Inter', sans-serif" };
+
+/* ── Material Symbols helper ────────────────────────────── */
+function MIcon({ name, size = 24, color = "currentColor", fill = 0, weight = 400 }: {
+  name: string; size?: number; color?: string; fill?: number; weight?: number;
+}) {
+  return (
+    <span
+      className="material-symbols-rounded"
+      style={{
+        fontSize: size,
+        color,
+        fontVariationSettings: `'FILL' ${fill}, 'wght' ${weight}, 'GRAD' 0, 'opsz' ${size}`,
+        lineHeight: 1,
+        display: "inline-flex",
+        alignItems: "center",
+        userSelect: "none",
+      }}
+    >
+      {name}
+    </span>
+  );
+}
+
+/* ── Brand SVG icons (Github / Linkedin) ────────────────── */
+function Github({ size = 20, color = "currentColor" }: { size?: number; color?: string }) {
+  return (
+    <svg width={size} height={size} viewBox="0 0 24 24" fill={color}>
+      <path d="M12 2C6.477 2 2 6.484 2 12.017c0 4.425 2.865 8.18 6.839 9.504.5.092.682-.217.682-.483 0-.237-.008-.868-.013-1.703-2.782.605-3.369-1.343-3.369-1.343-.454-1.158-1.11-1.466-1.11-1.466-.908-.62.069-.608.069-.608 1.003.07 1.531 1.032 1.531 1.032.892 1.53 2.341 1.088 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.113-4.555-4.951 0-1.093.39-1.988 1.029-2.688-.103-.253-.446-1.272.098-2.65 0 0 .84-.27 2.75 1.026A9.564 9.564 0 0112 6.844c.85.004 1.705.115 2.504.337 1.909-1.296 2.747-1.027 2.747-1.027.546 1.379.202 2.398.1 2.651.64.7 1.028 1.595 1.028 2.688 0 3.848-2.339 4.695-4.566 4.943.359.309.678.92.678 1.855 0 1.338-.012 2.419-.012 2.747 0 .268.18.58.688.482A10.019 10.019 0 0022 12.017C22 6.484 17.522 2 12 2z" />
+    </svg>
+  );
+}
+function LinkedinIcon({ size = 20, color = "currentColor" }: { size?: number; color?: string }) {
+  return (
+    <svg width={size} height={size} viewBox="0 0 24 24" fill={color}>
+      <path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433a2.062 2.062 0 01-2.063-2.065 2.064 2.064 0 112.063 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z" />
+    </svg>
+  );
+}
 
 /* ── useInView ──────────────────────────────────────────── */
 function useInView(threshold = 0.12) {
@@ -122,6 +155,7 @@ function Navbar() {
     { label: "Puerto Seguro", href: "#plataforma" },
     { label: "Tecnología", href: "#stack" },
     { label: "Impacto", href: "#impacto" },
+    { label: "Equipo", href: "#equipo" },
     { label: "Contacto", href: "#contacto" },
   ];
 
@@ -145,18 +179,12 @@ function Navbar() {
           }}
         >
           {/* Logo */}
-          <a href="#" className="flex items-center gap-2.5 no-underline">
-            <svg width="30" height="30" viewBox="0 0 32 32" fill="none">
-              <circle cx="16" cy="7" r="4.5" fill="#2A7CC7" />
-              <circle cx="5" cy="25" r="4.5" fill="#2A7CC7" />
-              <circle cx="27" cy="25" r="4.5" fill="#2A7CC7" />
-              <line x1="16" y1="11.5" x2="5" y2="20.5" stroke="#2A7CC7" strokeWidth="1.6" strokeLinecap="round" />
-              <line x1="16" y1="11.5" x2="27" y2="20.5" stroke="#2A7CC7" strokeWidth="1.6" strokeLinecap="round" />
-              <line x1="5" y1="25" x2="27" y2="25" stroke="#2A7CC7" strokeWidth="1.6" strokeLinecap="round" />
-            </svg>
-            <span style={{ ...MONT, fontWeight: 800, fontSize: "19px", color: "#0C2340", letterSpacing: "-0.02em" }}>
-              Inter-act
-            </span>
+          <a href="#" className="flex items-center no-underline">
+            <img
+              src="/src/assets/interActLogo.png"
+              alt="InterAct Logo"
+              style={{ height: "60px", width: "auto", objectFit: "contain" }}
+            />
           </a>
 
           {/* Desktop links */}
@@ -175,19 +203,7 @@ function Navbar() {
                 />
               </a>
             ))}
-            <button
-              className="ml-2 transition-all duration-200 hover:-translate-y-px"
-              style={{
-                ...MONT, fontWeight: 700, fontSize: "12.5px", letterSpacing: "0.06em", textTransform: "uppercase",
-                background: "#0C2340", color: "#fff", borderRadius: "6px",
-                padding: "10px 22px", border: "none", cursor: "pointer",
-                boxShadow: "0 4px 14px rgba(12,35,64,0.22)",
-              }}
-              onMouseEnter={(e) => (e.currentTarget.style.background = "#1A4A7A")}
-              onMouseLeave={(e) => (e.currentTarget.style.background = "#0C2340")}
-            >
-              Ver Demo
-            </button>
+            
           </div>
 
           {/* Hamburger */}
@@ -196,7 +212,7 @@ function Navbar() {
             style={{ background: "none", border: "none", color: "#0C2340", cursor: "pointer" }}
             onClick={() => setMobileOpen(true)}
           >
-            <Menu size={24} />
+            <MIcon name="menu" size={24} color="#0C2340" />
           </button>
         </nav>
       </div>
@@ -228,10 +244,10 @@ function Navbar() {
         >
           <span style={{ ...MONT, fontWeight: 800, fontSize: "18px", color: "#fff" }}>Inter-act</span>
           <button
-            style={{ background: "none", border: "none", color: "rgba(255,255,255,0.7)", cursor: "pointer" }}
+            style={{ background: "none", border: "none", cursor: "pointer", color: "#0C2340" }}
             onClick={() => setMobileOpen(false)}
           >
-            <X size={22} />
+            <MIcon name="close" size={22} color="#fff" />
           </button>
         </div>
         <div className="flex flex-col gap-1 p-6">
@@ -271,23 +287,29 @@ const SLIDES = [
     h1: "Construimos tecnología que cuida a las personas",
     sub: "Inter-act es el equipo detrás de Puerto Seguro: soluciones digitales con propósito humano, privacidad como arquitectura y rigor clínico como estándar.",
     btn1: "Conocer al equipo",
+    btn1Href: "#equipo",
     btn2: "Ver Puerto Seguro ↓",
-    imgId: "photo-1504307651254-35680f356dfd",
+    btn2Href: "#plataforma",
+    imgId: "pescadores.png",
   },
   {
     badge: "Detección Temprana de Burnout",
     h1: "Puerto Seguro: biometría + psicología + IA al servicio del trabajador",
     sub: "Monitoreo en tiempo real. Score de riesgo personalizado. Privacidad como arquitectura.",
     btn1: "Ver la plataforma",
-    btn2: "Descargar brief",
-    imgId: "photo-1578662996442-48f60103fc96",
+    btn1Href: "#plataforma",
+    btn2: "Contactar al equipo",
+    btn2Href: "#contacto",
+    imgId: "puertoSeguroBanner.png",
   },
   {
     badge: "Tecnología con Impacto Real",
     h1: "Prevenir el burnout antes de que ocurra",
     sub: "Combinamos wearables, encuestas clínicas validadas e inteligencia artificial para detectar el agotamiento antes de que se convierta en crisis.",
     btn1: "Ver metodología",
+    btn1Href: "#stack",
     btn2: "Contactar al equipo",
+    btn2Href: "#contacto",
     imgId: "photo-1573496359142-b8d87734a5a2",
   },
 ];
@@ -325,7 +347,7 @@ function HeroSlider() {
           style={{ opacity: i === current ? 1 : 0 }}
         >
           <img
-            src={`https://images.unsplash.com/${sl.imgId}?w=1440&h=640&fit=crop&auto=format`}
+            src={`/src/assets/${sl.imgId}`}
             alt=""
             aria-hidden="true"
             className="w-full h-full object-cover"
@@ -369,31 +391,35 @@ function HeroSlider() {
           </p>
 
           <div className="flex flex-wrap gap-4">
-            <button
+            <a
+              href={s.btn1Href}
               style={{
                 ...MONT, fontWeight: 700, fontSize: "13px", letterSpacing: "0.06em", textTransform: "uppercase",
                 background: "#2A7CC7", color: "#fff", borderRadius: "6px",
                 padding: "14px 30px", border: "none", cursor: "pointer",
                 boxShadow: "0 8px 24px rgba(42,124,199,0.38)",
                 transition: "all 0.2s",
+                textDecoration: "none", display: "inline-block",
               }}
-              onMouseEnter={(e) => { e.currentTarget.style.background = "#1A4A7A"; e.currentTarget.style.transform = "translateY(-2px)"; }}
-              onMouseLeave={(e) => { e.currentTarget.style.background = "#2A7CC7"; e.currentTarget.style.transform = "translateY(0)"; }}
+              onMouseEnter={(e) => { (e.currentTarget as HTMLElement).style.background = "#1A4A7A"; (e.currentTarget as HTMLElement).style.transform = "translateY(-2px)"; }}
+              onMouseLeave={(e) => { (e.currentTarget as HTMLElement).style.background = "#2A7CC7"; (e.currentTarget as HTMLElement).style.transform = "translateY(0)"; }}
             >
               {s.btn1}
-            </button>
-            <button
+            </a>
+            <a
+              href={s.btn2Href}
               style={{
                 ...MONT, fontWeight: 700, fontSize: "13px", letterSpacing: "0.06em", textTransform: "uppercase",
                 background: "transparent", color: "#fff", borderRadius: "6px",
                 padding: "14px 30px", border: "2px solid rgba(255,255,255,0.65)", cursor: "pointer",
                 transition: "all 0.2s",
+                textDecoration: "none", display: "inline-block",
               }}
-              onMouseEnter={(e) => { e.currentTarget.style.background = "#fff"; e.currentTarget.style.color = "#0C2340"; }}
-              onMouseLeave={(e) => { e.currentTarget.style.background = "transparent"; e.currentTarget.style.color = "#fff"; }}
+              onMouseEnter={(e) => { (e.currentTarget as HTMLElement).style.background = "#fff"; (e.currentTarget as HTMLElement).style.color = "#0C2340"; }}
+              onMouseLeave={(e) => { (e.currentTarget as HTMLElement).style.background = "transparent"; (e.currentTarget as HTMLElement).style.color = "#fff"; }}
             >
               {s.btn2}
-            </button>
+            </a>
           </div>
         </div>
       </div>
@@ -417,7 +443,7 @@ function HeroSlider() {
           onMouseEnter={(e) => (e.currentTarget.style.background = "rgba(255,255,255,0.28)")}
           onMouseLeave={(e) => (e.currentTarget.style.background = "rgba(255,255,255,0.15)")}
         >
-          {dir === "left" ? <ChevronLeft size={18} /> : <ChevronRight size={18} />}
+          {dir === "left" ? <MIcon name="chevron_left" size={18} /> : <MIcon name="chevron_right" size={18} />}
         </button>
       ))}
 
@@ -480,36 +506,40 @@ function QuienesSomos() {
           {/* Pills */}
           <div className="flex flex-wrap gap-3 mb-10">
             {[
-              { icon: "🔒", label: "Privacidad por diseño" },
-              { icon: "🧠", label: "Rigor clínico" },
-              { icon: "⚡", label: "Desarrollo ágil" },
+              { icon: "lock", label: "Privacidad por diseño" },
+              { icon: "neurology", label: "Rigor clínico" },
+              { icon: "bolt", label: "Desarrollo ágil" },
             ].map((p) => (
               <span
                 key={p.label}
+                className="flex items-center gap-1.5"
                 style={{
                   ...INTER, fontSize: "13px", fontWeight: 500,
-                  padding: "8px 16px", borderRadius: "100px",
+                  padding: "7px 14px", borderRadius: "100px",
                   background: "#EBF4FF", color: "#1A4A7A",
                   border: "1px solid #BFDBFE",
                 }}
               >
-                {p.icon} {p.label}
+                <MIcon name={p.icon} size={15} color="#1A4A7A" fill={1} />
+                {p.label}
               </span>
             ))}
           </div>
 
-          <button
+          <a
+            href="#equipo"
             style={{
               ...MONT, fontWeight: 700, fontSize: "13px", letterSpacing: "0.06em", textTransform: "uppercase",
               background: "#0C2340", color: "#fff", borderRadius: "6px",
               padding: "13px 28px", border: "none", cursor: "pointer",
               transition: "all 0.2s",
+              textDecoration: "none", display: "inline-block",
             }}
-            onMouseEnter={(e) => { e.currentTarget.style.background = "#1A4A7A"; e.currentTarget.style.transform = "translateY(-2px)"; e.currentTarget.style.boxShadow = "0 8px 24px rgba(12,35,64,0.3)"; }}
-            onMouseLeave={(e) => { e.currentTarget.style.background = "#0C2340"; e.currentTarget.style.transform = "translateY(0)"; e.currentTarget.style.boxShadow = "none"; }}
+            onMouseEnter={(e) => { (e.currentTarget as HTMLElement).style.background = "#1A4A7A"; (e.currentTarget as HTMLElement).style.transform = "translateY(-2px)"; (e.currentTarget as HTMLElement).style.boxShadow = "0 8px 24px rgba(12,35,64,0.3)"; }}
+            onMouseLeave={(e) => { (e.currentTarget as HTMLElement).style.background = "#0C2340"; (e.currentTarget as HTMLElement).style.transform = "translateY(0)"; (e.currentTarget as HTMLElement).style.boxShadow = "none"; }}
           >
             Conocer al equipo →
-          </button>
+          </a>
         </div>
 
         {/* Visual */}
@@ -524,7 +554,7 @@ function QuienesSomos() {
         >
           <div style={{ borderRadius: "16px", overflow: "hidden", background: "#F4F7FA" }}>
             <img
-              src="https://images.unsplash.com/photo-1522071820081-009f0129c71c?w=700&h=500&fit=crop&auto=format"
+              src="src\assets\equipo.png"
               alt="Equipo Inter-act trabajando"
               className="w-full object-cover"
               style={{ height: "420px" }}
@@ -541,9 +571,9 @@ function QuienesSomos() {
               boxShadow: "0 8px 32px rgba(0,0,0,0.12)",
             }}
           >
-            <CheckCircle size={18} color="#16A34A" />
+            <MIcon name="check_circle" size={18} color="#16A34A" fill={1} />
             <span style={{ ...INTER, fontSize: "13px", fontWeight: 600, color: "#1A1A2E" }}>
-              Validado con médicos y RRHH
+              Validado con especialistas
             </span>
           </div>
         </div>
@@ -557,52 +587,51 @@ function QuienesSomos() {
 ══════════════════════════════════════════════════════════ */
 const PLATFORM_CARDS = [
   {
-    icon: Smartphone,
+    icon: "smartphone",
     color: "#2A7CC7",
     title: "App móvil para el trabajador",
-    text: "El trabajador registra su estado al inicio de cada turno desde su celular. Check-in biométrico + encuesta psicológica MBI/SOFI. Sin nombre, sin exposición: solo un código anónimo.",
+    text: "El trabajador registra su estado al inicio de cada turno desde su celular. Check-in biométrico + encuesta psicológica MBI/SOFI. Con sus datos visibles para el mismo",
     badge: "React Native · Expo",
   },
   {
-    icon: BarChart2,
+    icon: "bar_chart",
     color: "#2A7CC7",
     title: "Dashboard de RRHH",
     text: "RRHH visualiza únicamente datos agregados por zona y turno. Nunca ve IDs individuales. Heatmap de riesgo, KPIs de bienestar colectivo y tendencias en el tiempo.",
     badge: "React · Recharts",
   },
   {
-    icon: Stethoscope,
+    icon: "stethoscope",
     color: "#2A7CC7",
     title: "Panel médico con análisis IA",
-    text: "El médico accede a evaluaciones individuales solo con consentimiento. La IA (Claude) genera una narrativa clínica estructurada que el médico valida. Auditoría permanente e inmutable.",
+    text: "El especialista accede a evaluaciones individuales solo con consentimiento. La IA genera una narrativa clínica estructurada que el especialista valida. Auditoría permanente e inmutable.",
     badge: "Claude AI · FastAPI",
   },
   {
-    icon: Radio,
+    icon: "sensors",
     color: "#00A8B5",
     title: "Simulador de pulsera wearable",
     text: "Un simulador por software genera lecturas biométricas realistas (FC, VFC, SpO2, temperatura) usando escenarios parametrizables: fatiga acumulada, estrés agudo, burnout severo.",
     badge: "Python · NumPy · SSE",
   },
   {
-    icon: Activity,
+    icon: "monitor_heart",
     color: "#00A8B5",
     title: "Motor de análisis personalizado",
     text: "El score de riesgo se calcula contra el baseline histórico de cada trabajador, no contra estándares genéricos. Z-scores por métrica, pesos validados clínicamente, clasificación en 4 niveles.",
     badge: "Algoritmo validado · Médicos",
   },
   {
-    icon: Lock,
+    icon: "lock",
     color: "#00A8B5",
     title: "Privacidad como arquitectura",
-    text: "El nombre del trabajador no existe en la base de datos. Solo existe un código anónimo. Los roles tienen acceso estrictamente segregado. Las evaluaciones de IA nunca se eliminan.",
+    text: "El nombre del trabajador existe solo para el y el especialista. Los demás roles ven un código anónimo con acceso estrictamente segregado. Las evaluaciones de IA nunca se eliminan.",
     badge: "JWT · RBAC · SQLite",
   },
 ];
 
 function FeatureCard({ card, delay }: { card: typeof PLATFORM_CARDS[0]; delay: number }) {
   const { ref, inView } = useInView();
-  const Icon = card.icon;
   return (
     <div
       ref={ref}
@@ -629,7 +658,7 @@ function FeatureCard({ card, delay }: { card: typeof PLATFORM_CARDS[0]; delay: n
         className="flex items-center justify-center mb-5"
         style={{ width: "52px", height: "52px", borderRadius: "12px", background: card.color === "#2A7CC7" ? "#EBF4FF" : "#E0F7FA" }}
       >
-        <Icon size={26} color={card.color} />
+        <MIcon name={card.icon} size={26} color={card.color} fill={1} />
       </div>
       <h3 style={{ ...MONT, fontWeight: 600, fontSize: "17px", color: "#0C2340", marginBottom: "10px", lineHeight: 1.3 }}>
         {card.title}
@@ -691,27 +720,27 @@ function PuertoSeguro() {
 const STEPS = [
   {
     num: "01",
-    icon: Smartphone,
+    icon: "smartphone",
     title: "Check-in al inicio del turno",
     text: "El trabajador abre la app, registra su estado y completa la encuesta psicológica (MBI + SOFI). La pulsera wearable envía lecturas biométricas en paralelo.",
   },
   {
     num: "02",
-    icon: Activity,
+    icon: "monitor_heart",
     title: "Análisis personalizado en tiempo real",
     text: "El backend calcula el score de riesgo comparando las métricas del turno contra el baseline histórico individual de cada trabajador.",
   },
   {
     num: "03",
-    icon: Brain,
+    icon: "neurology",
     title: "Claude genera la narrativa clínica",
     text: "Si el score supera el umbral, Claude analiza todos los factores contextuales y genera una evaluación estructurada en JSON con nivel de riesgo, justificación y acción recomendada.",
   },
   {
     num: "04",
-    icon: CheckCircle,
-    title: "El médico valida y actúa",
-    text: "El panel médico muestra la narrativa de IA para revisión humana. El médico acepta, rechaza o ajusta. Cada decisión queda en el registro de auditoría permanente.",
+    icon: "check_circle",
+    title: "El especialista valida y actúa",
+    text: "El panel del especialista muestra la narrativa de IA para revisión humana. El especialista acepta, rechaza o ajusta. Cada decisión queda en el registro de auditoría permanente.",
   },
 ];
 
@@ -744,7 +773,6 @@ function Metodologia() {
           />
           {STEPS.map((step, i) => {
             const { ref, inView } = useInView();
-            const Icon = step.icon;
             return (
               <div
                 key={step.num}
@@ -771,7 +799,7 @@ function Metodologia() {
                   className="flex items-center justify-center mb-4"
                   style={{ width: "40px", height: "40px", borderRadius: "10px", background: "#F4F7FA" }}
                 >
-                  <Icon size={20} color="#2A7CC7" />
+                  <MIcon name={step.icon} size={20} color="#2A7CC7" fill={1} />
                 </div>
                 <h3 style={{ ...MONT, fontWeight: 700, fontSize: "15px", color: "#0C2340", marginBottom: "8px", lineHeight: 1.3 }}>
                   {step.title}
@@ -787,9 +815,7 @@ function Metodologia() {
         {/* Mobile: vertical */}
         <div className="flex md:hidden flex-col gap-8 relative">
           <div className="absolute top-6 bottom-6 left-6 w-px" style={{ background: "#E2E8F0" }} />
-          {STEPS.map((step, i) => {
-            const Icon = step.icon;
-            return (
+          {STEPS.map((step, _i) => (
               <div key={step.num} className="flex gap-6 pl-0">
                 <div className="relative z-10 flex-shrink-0">
                   <div
@@ -811,8 +837,7 @@ function Metodologia() {
                   </p>
                 </div>
               </div>
-            );
-          })}
+            ))}
         </div>
       </div>
     </section>
@@ -827,7 +852,7 @@ function StatCard({
   numTarget,
   suffix,
   description,
-  Icon,
+  icon,
   accent,
   delay,
   parentInView,
@@ -836,7 +861,7 @@ function StatCard({
   numTarget?: number;
   suffix: string;
   description: string;
-  Icon: React.ElementType;
+  icon: string;
   accent: string;
   delay: number;
   parentInView: boolean;
@@ -868,7 +893,7 @@ function StatCard({
         className="flex items-center justify-center mb-5"
         style={{ width: "48px", height: "48px", borderRadius: "10px", background: accent === "#2A7CC7" ? "#EBF4FF" : "#E0F7FA" }}
       >
-        <Icon size={24} color={accent} />
+        <MIcon name={icon} size={24} color={accent} fill={1} />
       </div>
       <div style={{ ...MONT, fontWeight: 800, fontSize: "48px", color: "#0C2340", lineHeight: 1, marginBottom: "6px" }}>
         {displayVal}
@@ -889,28 +914,28 @@ function Metricas() {
       numTarget: 4,
       suffix: "niveles de riesgo",
       description: "Normal · Leve · Moderado · Crítico — clasificación clínica validada",
-      Icon: Shield,
+      icon: "verified_user",
       accent: "#2A7CC7",
     },
     {
       numDisplay: "60/40",
       suffix: "biométrico / psicológico",
       description: "Ponderación del score total: 60% métricas físicas, 40% encuesta psicológica",
-      Icon: Scale,
+      icon: "balance",
       accent: "#00A8B5",
     },
     {
       numTarget: 5,
       suffix: "métricas biométricas",
       description: "FC · VFC · SpO2 · Temperatura · Conductancia galvánica",
-      Icon: Activity,
+      icon: "monitor_heart",
       accent: "#2A7CC7",
     },
     {
       numTarget: 3,
       suffix: "roles diferenciados",
-      description: "Trabajador · RRHH · Médico — cada uno ve solo lo que le corresponde",
-      Icon: Lock,
+      description: "Trabajador · RRHH · Especialista — cada uno ve solo lo que le corresponde",
+      icon: "lock",
       accent: "#00A8B5",
     },
   ];
@@ -1011,9 +1036,9 @@ function StackTecnologico() {
           </h2>
         </div>
 
-        <div className="flex flex-col gap-10">
+        <div className="flex flex-col gap-10 items-center">
           {TECH_ROWS.map((row, ri) => (
-            <div key={row.label}>
+            <div key={row.label} className="w-full text-center">
               <p
                 style={{
                   ...INTER, fontSize: "11px", fontWeight: 600, letterSpacing: "0.1em",
@@ -1023,7 +1048,7 @@ function StackTecnologico() {
               >
                 {row.label}
               </p>
-              <div className="flex flex-wrap gap-3">
+              <div className="flex flex-wrap gap-3 justify-center">
                 {row.pills.map((pill, pi) => (
                   <TechPill key={pill} name={pill} delay={ri * 80 + pi * 60} inView={inView} />
                 ))}
@@ -1122,6 +1147,146 @@ function CTA() {
 }
 
 /* ══════════════════════════════════════════════════════════
+   EQUIPO DE DESARROLLO
+══════════════════════════════════════════════════════════ */
+const teamMembers = [
+  {
+    name: "Contanza Macri",
+    role: "Estudiante de Ingenieria en Sistemas de Informacion",
+    photo: "src/assets/contuPerfil.png",
+  },
+  {
+    name: "Fiona Borelli",
+    role: "Estudiante de Contador Publico",
+    photo: "src/assets/fionaPerfil.png",
+  },
+  {
+    name: "Lara Jesser Lazarte",
+    role: "Estudiante de Arquitectura",
+    photo: "src/assets/laraPerfil.png",
+  },
+  {
+    name: "Dylan Marquez",
+    role: "Estudiante de Licenciatura en Ciencias de la Computacion",
+    photo: "src/assets/dylanPerfil.png",
+  },
+];
+
+function EquipoDesarrollo() {
+  const { ref, inView } = useInView(0.1);
+  return (
+    <section
+      id="equipo"
+      ref={ref}
+      style={{
+        background: "linear-gradient(180deg, #f0f4f8 0%, #ffffff 100%)",
+        padding: "96px clamp(24px,7vw,80px)",
+      }}
+    >
+      {/* Header */}
+      <div
+        className="max-w-[1200px] mx-auto text-center"
+        style={{
+          opacity: inView ? 1 : 0,
+          transform: inView ? "translateY(0)" : "translateY(32px)",
+          transition: "opacity 0.6s ease, transform 0.6s ease",
+          marginBottom: "64px",
+        }}
+      >
+        <span
+          style={{
+            ...MONT, display: "inline-block", fontSize: "11px", fontWeight: 700,
+            letterSpacing: "0.14em", textTransform: "uppercase",
+            color: "#2A7CC7", marginBottom: "14px",
+          }}
+        >
+          Nuestro equipo
+        </span>
+        <h2
+          style={{
+            ...MONT, fontSize: "clamp(28px,4vw,42px)", fontWeight: 800,
+            color: "#0C2340", lineHeight: 1.15, margin: "0 0 16px",
+          }}
+        >
+          Las personas detrás de InterAct
+        </h2>
+        <p
+          style={{
+            ...INTER, fontSize: "17px", color: "#4A5568",
+            lineHeight: 1.7, maxWidth: "540px", margin: "0 auto",
+          }}
+        >
+          Un equipo multidisciplinario comprometido con la tecnología de impacto humano.
+        </p>
+      </div>
+
+      {/* Cards grid */}
+      <div
+        className="max-w-[1200px] mx-auto grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8"
+      >
+        {teamMembers.map((member, i) => (
+          <div
+            key={i}
+            style={{
+              background: "#ffffff",
+              borderRadius: "20px",
+              boxShadow: "0 4px 24px rgba(12,35,64,0.08)",
+              overflow: "hidden",
+              border: "1px solid rgba(42,124,199,0.10)",
+              transition: "transform 0.28s ease, box-shadow 0.28s ease",
+              opacity: inView ? 1 : 0,
+              transform: inView ? "translateY(0)" : "translateY(40px)",
+              transitionDelay: `${i * 0.12}s`,
+              cursor: "default",
+            }}
+            onMouseEnter={(e) => {
+              (e.currentTarget as HTMLElement).style.transform = "translateY(-8px)";
+              (e.currentTarget as HTMLElement).style.boxShadow = "0 16px 48px rgba(12,35,64,0.16)";
+            }}
+            onMouseLeave={(e) => {
+              (e.currentTarget as HTMLElement).style.transform = "translateY(0)";
+              (e.currentTarget as HTMLElement).style.boxShadow = "0 4px 24px rgba(12,35,64,0.08)";
+            }}
+          >
+            {/* Photo 1:1 */}
+            <div style={{ width: "100%", aspectRatio: "1 / 1", overflow: "hidden" }}>
+              <img
+                src={member.photo}
+                alt={member.name}
+                style={{ width: "100%", height: "100%", objectFit: "cover", display: "block" }}
+              />
+            </div>
+
+            {/* Info */}
+            <div style={{ padding: "20px 22px 24px" }}>
+              <p
+                style={{
+                  ...MONT, fontSize: "15px", fontWeight: 700,
+                  color: "#0C2340", margin: "0 0 6px",
+                }}
+              >
+                {member.name}
+              </p>
+              <span
+                style={{
+                  ...INTER, display: "inline-block", fontSize: "12px", fontWeight: 500,
+                  color: "#2A7CC7",
+                  background: "rgba(42,124,199,0.10)",
+                  borderRadius: "100px",
+                  padding: "3px 10px",
+                }}
+              >
+                {member.role}
+              </span>
+            </div>
+          </div>
+        ))}
+      </div>
+    </section>
+  );
+}
+
+/* ══════════════════════════════════════════════════════════
    FOOTER
 ══════════════════════════════════════════════════════════ */
 function Footer() {
@@ -1136,22 +1301,18 @@ function Footer() {
       >
         {/* Brand */}
         <div>
-          <div className="flex items-center gap-2.5 mb-4">
-            <svg width="28" height="28" viewBox="0 0 32 32" fill="none">
-              <circle cx="16" cy="7" r="4.5" fill="rgba(255,255,255,0.9)" />
-              <circle cx="5" cy="25" r="4.5" fill="rgba(255,255,255,0.9)" />
-              <circle cx="27" cy="25" r="4.5" fill="rgba(255,255,255,0.9)" />
-              <line x1="16" y1="11.5" x2="5" y2="20.5" stroke="rgba(255,255,255,0.9)" strokeWidth="1.6" strokeLinecap="round" />
-              <line x1="16" y1="11.5" x2="27" y2="20.5" stroke="rgba(255,255,255,0.9)" strokeWidth="1.6" strokeLinecap="round" />
-              <line x1="5" y1="25" x2="27" y2="25" stroke="rgba(255,255,255,0.9)" strokeWidth="1.6" strokeLinecap="round" />
-            </svg>
-            <span style={{ ...MONT, fontWeight: 800, fontSize: "18px", color: "#fff" }}>Inter-act</span>
+          <div className="flex flex-col items-center text-center mb-4">
+            <img
+              src="/src/assets/interActLogo.png"
+              alt="InterAct Logo"
+              style={{ height: "30vh", width: "30vw", objectFit: "contain", marginBottom: "12px" }}
+            />
+            <p style={{ ...INTER, fontSize: "14px", lineHeight: 1.6, color: "rgba(255,255,255,0.55)", margin: 0 }}>
+              Tecnología con propósito humano
+            </p>
           </div>
-          <p style={{ ...INTER, fontSize: "14px", lineHeight: 1.6, color: "rgba(255,255,255,0.55)", marginBottom: "20px" }}>
-            Tecnología con propósito humano
-          </p>
           <div className="flex gap-3">
-            {[Github, Linkedin].map((Icon, i) => (
+            {[Github, LinkedinIcon].map((Icon, i) => (
               <a
                 key={i}
                 href="#"
@@ -1249,6 +1410,7 @@ export default function App() {
         <Metodologia />
         <Metricas />
         <StackTecnologico />
+        <EquipoDesarrollo />
         <CTA />
       </main>
 
