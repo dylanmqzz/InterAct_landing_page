@@ -407,8 +407,8 @@ function HeroSlider() {
 
   return (
     <section 
-      className="relative w-full overflow-hidden min-h-[65vh] md:min-h-[max(100vh,720px)]" 
-      style={{ background: "#0C2340", touchAction: "pan-y", userSelect: "none" }}
+      className="relative w-full overflow-hidden" 
+      style={{ minHeight: "max(100vh, 720px)", background: "#0C2340", touchAction: "pan-y", userSelect: "none" }}
       onTouchStart={(e) => handleDragStart(e.touches[0].clientX)}
       onTouchMove={(e) => handleDragMove(e.touches[0].clientX)}
       onTouchEnd={handleDragEnd}
@@ -429,7 +429,6 @@ function HeroSlider() {
             alt=""
             aria-hidden="true"
             className="w-full h-full object-cover"
-            style={{ objectPosition: "center" }}
             draggable={false}
           />
           <div className="absolute inset-0" style={{ background: "rgba(12,35,64,0.7)" }} />
@@ -438,8 +437,9 @@ function HeroSlider() {
 
       {/* Content */}
       <div
-        className="relative z-10 flex items-center h-full min-h-[65vh] md:min-h-[max(100vh,720px)]"
+        className="relative z-10 flex items-center h-full"
         style={{
+          minHeight: "max(100vh, 720px)",
           paddingTop: "110px",
           paddingBottom: "80px",
           paddingLeft: "clamp(24px, 7vw, 120px)",
@@ -449,7 +449,7 @@ function HeroSlider() {
           transition: "opacity 0.35s ease, transform 0.35s ease",
         }}
       >
-        <div style={{ maxWidth: "720px", display: "flex", flexDirection: "column", justifyContent: "center", alignItems: "flex-start", minHeight: "min(420px, 50vh)" }}>
+        <div style={{ maxWidth: "720px", display: "flex", flexDirection: "column", justifyContent: "center", alignItems: "flex-start", minHeight: "420px" }}>
           <Chip dark>{s.badge}</Chip>
 
           <h1
@@ -457,7 +457,7 @@ function HeroSlider() {
             style={{
               ...MONT,
               fontWeight: 800,
-              fontSize: "clamp(26px, 6vw, 62px)",
+              fontSize: "clamp(32px, 4.5vw, 62px)",
               lineHeight: 1.1,
               letterSpacing: "-0.02em",
             }}
@@ -465,7 +465,7 @@ function HeroSlider() {
             {s.h1}
           </h1>
 
-          <p style={{ ...INTER, fontSize: "clamp(14px, 3.5vw, 17px)", lineHeight: 1.65, color: "rgba(255,255,255,0.8)", maxWidth: "560px", marginBottom: "36px" }}>
+          <p style={{ ...INTER, fontSize: "17px", lineHeight: 1.65, color: "rgba(255,255,255,0.8)", maxWidth: "560px", marginBottom: "36px" }}>
             {s.sub}
           </p>
 
@@ -473,9 +473,9 @@ function HeroSlider() {
             <a
               href={s.btn1Href}
               style={{
-                ...MONT, fontWeight: 700, fontSize: "clamp(11px, 2.5vw, 13px)", letterSpacing: "0.06em", textTransform: "uppercase",
+                ...MONT, fontWeight: 700, fontSize: "13px", letterSpacing: "0.06em", textTransform: "uppercase",
                 background: "#2A7CC7", color: "#fff", borderRadius: "6px",
-                padding: "clamp(12px, 3vw, 14px) clamp(22px, 5vw, 30px)", border: "none", cursor: "pointer",
+                padding: "14px 30px", border: "none", cursor: "pointer",
                 boxShadow: "0 8px 24px rgba(42,124,199,0.38)",
                 transition: "all 0.2s",
                 textDecoration: "none", display: "inline-block",
@@ -488,9 +488,9 @@ function HeroSlider() {
             <a
               href={s.btn2Href}
               style={{
-                ...MONT, fontWeight: 700, fontSize: "clamp(11px, 2.5vw, 13px)", letterSpacing: "0.06em", textTransform: "uppercase",
+                ...MONT, fontWeight: 700, fontSize: "13px", letterSpacing: "0.06em", textTransform: "uppercase",
                 background: "transparent", color: "#fff", borderRadius: "6px",
-                padding: "clamp(12px, 3vw, 14px) clamp(22px, 5vw, 30px)", border: "2px solid rgba(255,255,255,0.65)", cursor: "pointer",
+                padding: "14px 30px", border: "2px solid rgba(255,255,255,0.65)", cursor: "pointer",
                 transition: "all 0.2s",
                 textDecoration: "none", display: "inline-block",
               }}
