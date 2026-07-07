@@ -1,5 +1,15 @@
 import { useState, useEffect, useRef, useCallback, createContext, useContext } from "react";
 
+/* ── Image assets ───────────────────────────────────────── */
+import interActLogo from "../assets/interActLogo.png";
+import imgPescadores from "../assets/pescadores.png";
+import imgPuertoSeguro from "../assets/puertoSeguroBanner.png";
+import imgBurnout from "../assets/burnoutHojas.png";
+import photoContu from "../assets/contuPerfil.png";
+import photoFiona from "../assets/fionaPerfil.png";
+import photoLara from "../assets/laraPerfil.png";
+import photoDylan from "../assets/dylanPerfil.png";
+
 /* ── Fonts ─────────────────────────────────────────────── */
 const MONT: React.CSSProperties = { fontFamily: "'Montserrat', sans-serif" };
 const INTER: React.CSSProperties = { fontFamily: "'Inter', sans-serif" };
@@ -190,11 +200,11 @@ function Navbar() {
         >
           {/* Logo */}
           <a href="#" className="flex items-center no-underline">
-            <img
-              src="/src/assets/interActLogo.png"
-              alt="InterAct Logo"
-              style={{ height: "60px", width: "auto", objectFit: "contain", borderRadius:"15px" }}
-            />
+             <img
+               src={interActLogo}
+               alt="InterAct Logo"
+               style={{ height: "60px", width: "auto", objectFit: "contain", borderRadius:"15px" }}
+             />
           </a>
 
           {/* Desktop links */}
@@ -316,7 +326,7 @@ const SLIDES = [
     btn1Href: "#equipo",
     btn2: "Ver Puerto Seguro",
     btn2Href: "#plataforma",
-    imgId: "pescadores.png",
+    img: imgPescadores,
   },
   {
     badge: "Detección Temprana de Burnout",
@@ -326,7 +336,7 @@ const SLIDES = [
     btn1Href: "#plataforma",
     btn2: "Contactar al equipo",
     btn2Href: "#contacto",
-    imgId: "puertoSeguroBanner.png",
+    img: imgPuertoSeguro,
   },
   {
     badge: "Tecnología con Impacto Real",
@@ -336,7 +346,7 @@ const SLIDES = [
     btn1Href: "#stack",
     btn2: "Contactar al equipo",
     btn2Href: "#contacto",
-    imgId: "burnoutHojas.png",
+    img: imgBurnout,
   },
 ];
 
@@ -373,7 +383,7 @@ function HeroSlider() {
           style={{ opacity: i === current ? 1 : 0 }}
         >
           <img
-            src={`/src/assets/${sl.imgId}`}
+            src={sl.img}
             alt=""
             aria-hidden="true"
             className="w-full h-full object-cover"
@@ -1183,22 +1193,22 @@ const teamMembers = [
   {
     name: "Constanza Macri",
     role: "Estudiante de Ingeniería en Sistemas de Información",
-    photo: "src/assets/contuPerfil.png",
+    photo: photoContu,
   },
   {
     name: "Fiona Borelli",
     role: "Estudiante de Contador Público",
-    photo: "src/assets/fionaPerfil.png",
+    photo: photoFiona,
   },
   {
     name: "Lara Jesser Lazarte",
     role: "Estudiante de Arquitectura",
-    photo: "src/assets/laraPerfil.png",
+    photo: photoLara,
   },
   {
     name: "Dylan Márquez",
     role: "Estudiante de Licenciatura en Ciencias de la Computación",
-    photo: "src/assets/dylanPerfil.png",
+    photo: photoDylan,
   },
 ];
 
@@ -1335,7 +1345,7 @@ function Footer() {
         <div>
           <div className="flex flex-col items-center text-center mb-4">
             <img
-              src="/src/assets/interActLogo.png"
+              src={interActLogo}
               alt="InterAct Logo"
               style={{ height: "30vh", width: "30vw", objectFit: "contain", marginBottom: "12px" }}
             />
