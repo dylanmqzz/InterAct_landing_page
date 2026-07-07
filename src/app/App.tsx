@@ -1181,13 +1181,13 @@ function CTA() {
 ══════════════════════════════════════════════════════════ */
 const teamMembers = [
   {
-    name: "Contanza Macri",
-    role: "Estudiante de Ingenieria en Sistemas de Informacion",
+    name: "Constanza Macri",
+    role: "Estudiante de Ingeniería en Sistemas de Información",
     photo: "src/assets/contuPerfil.png",
   },
   {
     name: "Fiona Borelli",
-    role: "Estudiante de Contador Publico",
+    role: "Estudiante de Contador Público",
     photo: "src/assets/fionaPerfil.png",
   },
   {
@@ -1196,8 +1196,8 @@ const teamMembers = [
     photo: "src/assets/laraPerfil.png",
   },
   {
-    name: "Dylan Marquez",
-    role: "Estudiante de Licenciatura en Ciencias de la Computacion",
+    name: "Dylan Márquez",
+    role: "Estudiante de Licenciatura en Ciencias de la Computación",
     photo: "src/assets/dylanPerfil.png",
   },
 ];
