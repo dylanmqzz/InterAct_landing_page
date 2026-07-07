@@ -408,7 +408,7 @@ function HeroSlider() {
   return (
     <section 
       className="relative w-full overflow-hidden" 
-      style={{ minHeight: "max(100vh, 720px)", background: "#0C2340", touchAction: "pan-y", userSelect: "none" }}
+      style={{ minHeight: "100vh", background: "#0C2340", touchAction: "pan-y", userSelect: "none" }}
       onTouchStart={(e) => handleDragStart(e.touches[0].clientX)}
       onTouchMove={(e) => handleDragMove(e.touches[0].clientX)}
       onTouchEnd={handleDragEnd}
@@ -439,7 +439,7 @@ function HeroSlider() {
       <div
         className="relative z-10 flex items-center h-full"
         style={{
-          minHeight: "max(100vh, 720px)",
+          minHeight: "100vh",
           paddingTop: "110px",
           paddingBottom: "80px",
           paddingLeft: "clamp(24px, 7vw, 120px)",
